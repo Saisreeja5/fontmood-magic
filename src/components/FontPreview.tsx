@@ -1,7 +1,8 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { useFontMoodStore, FontPair } from '@/lib/fontMoodStore';
 import useFontLoader from '@/hooks/useFontLoader';
 import AccessibilityChecker from './AccessibilityChecker';
@@ -9,6 +10,7 @@ import AccessibilityChecker from './AccessibilityChecker';
 const FontPreview: React.FC = () => {
   const { currentMood, nextPair, getCurrentPair } = useFontMoodStore();
   const currentPair = getCurrentPair();
+  const [customText, setCustomText] = useState('');
   
   // Load the fonts
   useFontLoader(currentPair.headingFont, currentPair.bodyFont);
@@ -52,14 +54,23 @@ const FontPreview: React.FC = () => {
             className="text-4xl sm:text-5xl font-bold mb-4 font-transition" 
             style={headingStyles}
           >
-            {currentPair.sampleHeading}
+            {customText || currentPair.sampleHeading}
           </h1>
           <p 
             className="text-lg font-transition" 
             style={bodyStyles}
           >
-            {currentPair.sampleText}
+            {customText || currentPair.sampleText}
           </p>
+        </div>
+        
+        <div className="mb-4">
+          <Textarea 
+            placeholder="Enter your own text to preview the font pairing"
+            value={customText}
+            onChange={(e) => setCustomText(e.target.value)}
+            className="w-full"
+          />
         </div>
         
         <AccessibilityChecker 
@@ -68,7 +79,14 @@ const FontPreview: React.FC = () => {
           className="mb-6"
         />
         
-        <div className="flex justify-end">
+        <div className="flex justify-between items-center">
+          <Button 
+            variant="secondary"
+            onClick={() => setCustomText('')}
+            className="flex items-center gap-2"
+          >
+            Reset Text
+          </Button>
           <Button 
             onClick={nextPair}
             className="flex items-center gap-2"
