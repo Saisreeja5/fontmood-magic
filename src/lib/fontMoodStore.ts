@@ -1,5 +1,5 @@
-
 import { create } from 'zustand';
+import { loadGoogleFont } from '@/services/googleFonts';
 
 export type Mood = 'happy' | 'playful' | 'serious' | 'calm' | 'energetic';
 
@@ -19,71 +19,131 @@ const moodFontMap: MoodMap = {
   happy: [
     {
       headingFont: 'Playfair Display',
-      bodyFont: 'Inter',
-      sampleHeading: 'Embracing Joy and Creativity',
-      sampleText: 'Happiness is the secret ingredient that turns ordinary moments into extraordinary memories. Design with vibrant energy and open spaces.',
+      bodyFont: 'Source Sans Pro',
+      sampleHeading: 'Joyful Typography',
+      sampleText: 'Create delightful experiences through carefully selected font pairings.',
     },
     {
-      headingFont: 'Montserrat',
-      bodyFont: 'Lora',
-      sampleHeading: 'Bright Ideas Shine Here',
-      sampleText: 'Happiness brings clarity to design choices, allowing us to create experiences that resonate with positivity and purpose.',
+      headingFont: 'Fredoka One',
+      bodyFont: 'Lato',
+      sampleHeading: 'Cheerful Design',
+      sampleText: 'Express happiness through playful yet readable type combinations.',
+    },
+    {
+      headingFont: 'Pacifico',
+      bodyFont: 'Roboto',
+      sampleHeading: 'Spread Some Joy',
+      sampleText: 'Let your typography reflect the positive energy of your content.',
+    },
+    {
+      headingFont: 'Dancing Script',
+      bodyFont: 'Open Sans',
+      sampleHeading: 'Happy Moments',
+      sampleText: 'Capture the essence of joy with elegant script and clean sans-serif.',
     },
   ],
   playful: [
     {
-      headingFont: 'Comic Sans MS',
-      bodyFont: 'Arial',
-      sampleHeading: 'Let\'s Get Creative!',
-      sampleText: 'Playfulness adds a spark of joy to everyday design. It invites interaction and creates memorable experiences for users of all ages.',
+      headingFont: 'Righteous',
+      bodyFont: 'Quicksand',
+      sampleHeading: 'Fun & Creative',
+      sampleText: 'Express creativity through distinctive and playful typography choices.',
     },
     {
-      headingFont: 'Pacifico',
-      bodyFont: 'Quicksand',
-      sampleHeading: 'Fun Times Ahead',
-      sampleText: 'When design is playful, it breaks down barriers and creates connections through shared moments of delight and surprise.',
+      headingFont: 'Lobster',
+      bodyFont: 'Nunito',
+      sampleHeading: 'Playful Spirit',
+      sampleText: 'Add personality to your design with these whimsical combinations.',
+    },
+    {
+      headingFont: 'Comfortaa',
+      bodyFont: 'Maven Pro',
+      sampleHeading: 'Quirky & Fun',
+      sampleText: 'Bring a sense of play to your design with rounded letterforms.',
+    },
+    {
+      headingFont: 'Permanent Marker',
+      bodyFont: 'Karla',
+      sampleHeading: 'Creative Energy',
+      sampleText: 'Unleash creativity with handwritten style and clean body text.',
     },
   ],
   serious: [
     {
-      headingFont: 'Georgia',
-      bodyFont: 'Roboto',
-      sampleHeading: 'Professional Excellence',
-      sampleText: 'A serious approach to typography establishes credibility and trust. It communicates expertise and attention to detail.',
-    },
-    {
       headingFont: 'Merriweather',
       bodyFont: 'Source Sans Pro',
-      sampleHeading: 'Strategic Innovation',
-      sampleText: 'The foundation of effective communication is clarity and purpose. Typography choices should reflect the gravity of your message.',
+      sampleHeading: 'Professional Excellence',
+      sampleText: 'Convey authority and expertise through typography.',
+    },
+    {
+      headingFont: 'Libre Baskerville',
+      bodyFont: 'Work Sans',
+      sampleHeading: 'Classic Authority',
+      sampleText: 'Traditional serif paired with modern sans for timeless appeal.',
+    },
+    {
+      headingFont: 'Spectral',
+      bodyFont: 'IBM Plex Sans',
+      sampleHeading: 'Corporate Trust',
+      sampleText: 'Build credibility with sophisticated type combinations.',
+    },
+    {
+      headingFont: 'PT Serif',
+      bodyFont: 'PT Sans',
+      sampleHeading: 'Business Focus',
+      sampleText: 'Professional typography for corporate communications.',
     },
   ],
   calm: [
     {
-      headingFont: 'Tenor Sans',
-      bodyFont: 'Open Sans',
-      sampleHeading: 'Finding Balance',
-      sampleText: 'Calm design creates space for reflection and thoughtful engagement. It reduces visual noise and centers the user experience.',
+      headingFont: 'Cormorant Garamond',
+      bodyFont: 'Proza Libre',
+      sampleHeading: 'Serene Design',
+      sampleText: 'Create peaceful reading experiences with balanced typography.',
     },
     {
-      headingFont: 'Cormorant Garamond',
-      bodyFont: 'Nunito Sans',
-      sampleHeading: 'Peaceful Moments',
-      sampleText: 'The art of creating calm through design involves intentional spacing, gentle transitions, and harmonious typography choices.',
+      headingFont: 'Marcellus',
+      bodyFont: 'Source Sans Pro',
+      sampleHeading: 'Peaceful Balance',
+      sampleText: 'Achieve harmony through careful font selection.',
+    },
+    {
+      headingFont: 'Crimson Text',
+      bodyFont: 'Lato',
+      sampleHeading: 'Quiet Elegance',
+      sampleText: 'Elegant serenity through classic type combinations.',
+    },
+    {
+      headingFont: 'Gilda Display',
+      bodyFont: 'Quattrocento Sans',
+      sampleHeading: 'Tranquil Space',
+      sampleText: 'Design for calmness with sophisticated typography.',
     },
   ],
   energetic: [
     {
+      headingFont: 'Montserrat',
+      bodyFont: 'Hind',
+      sampleHeading: 'BOLD MOVES',
+      sampleText: 'Dynamic typography that energizes your design.',
+    },
+    {
+      headingFont: 'Raleway',
+      bodyFont: 'Open Sans',
+      sampleHeading: 'VIBRANT DESIGN',
+      sampleText: 'Create impact with powerful type combinations.',
+    },
+    {
       headingFont: 'Bebas Neue',
-      bodyFont: 'Karla',
-      sampleHeading: 'BOLD MOVES ONLY',
-      sampleText: 'Energy in design captures attention and drives action. It uses dynamic contrasts and strong typography to create momentum.',
+      bodyFont: 'Roboto',
+      sampleHeading: 'HIGH ENERGY',
+      sampleText: 'Bold typography that demands attention.',
     },
     {
       headingFont: 'Oswald',
-      bodyFont: 'Noto Sans',
-      sampleHeading: 'PUSH THE BOUNDARIES',
-      sampleText: 'When design pulses with energy, it creates an immediate connection and inspires users to engage with renewed enthusiasm.',
+      bodyFont: 'Source Sans Pro',
+      sampleHeading: 'DYNAMIC FORCE',
+      sampleText: 'Strong type choices for maximum impact.',
     },
   ],
 };
@@ -111,3 +171,16 @@ export const useFontMoodStore = create<FontMoodState>((set, get) => ({
     return moodFontMap[currentMood][currentPairIndex];
   },
 }));
+
+// Update the store to preload fonts
+const preloadFonts = () => {
+  Object.values(moodFontMap).forEach(pairs => {
+    pairs.forEach(pair => {
+      loadGoogleFont(pair.headingFont);
+      loadGoogleFont(pair.bodyFont);
+    });
+  });
+};
+
+// Initialize font loading
+preloadFonts();

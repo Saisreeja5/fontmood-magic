@@ -1,35 +1,22 @@
 
 import { useEffect } from 'react';
+import { loadGoogleFont } from '@/services/googleFonts';
 
-// This is a simplified font loader that simulates loading fonts
-// In a real application, you might use a library like Web Font Loader or FontFace API
 export function useFontLoader(headingFont: string, bodyFont: string) {
   useEffect(() => {
-    // This function would normally load fonts dynamically
-    // For this demo, we're using Google Fonts loaded in index.css
+    // Load both fonts
+    loadGoogleFont(headingFont);
+    loadGoogleFont(bodyFont);
     
-    // Here you would typically:
-    // 1. Check if fonts are already loaded
-    // 2. If not, dynamically create link or style elements
-    // 3. Handle loading states and events
-    
-    console.log(`Loading fonts: ${headingFont} and ${bodyFont}`);
-    
-    // Simulate font loading event
+    // Dispatch font loading event
     const fontLoadEvent = new CustomEvent('fontsLoaded', {
       detail: { headingFont, bodyFont }
     });
     
-    // Dispatch event after a short delay to simulate loading
-    setTimeout(() => {
-      document.dispatchEvent(fontLoadEvent);
-      console.log('Fonts loaded successfully');
-    }, 300);
+    document.dispatchEvent(fontLoadEvent);
     
-    return () => {
-      // Cleanup if needed
-    };
   }, [headingFont, bodyFont]);
 }
 
 export default useFontLoader;
+
