@@ -12,7 +12,7 @@ const FontTips: React.FC = () => {
     },
     {
       title: 'Match the Mood',
-      description: 'Choose fonts that reflect your content's emotional tone - playful, serious, elegant, or bold.',
+      description: "Choose fonts that reflect your content's emotional tone - playful, serious, elegant, or bold.",
       icon: <Lightbulb className="h-6 w-6 text-primary" />,
     },
     {
