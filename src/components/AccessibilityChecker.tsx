@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { analyzeFontPairing, FontAnalysisResult } from '@/services/fontAnalysis';
 import { useFontMoodStore } from '@/lib/fontMoodStore';
 import { toast } from 'sonner';
+import { loadGoogleFont } from '@/services/googleFonts';
 
 interface AccessibilityCheckerProps {
   headingFont: string;
@@ -19,16 +20,42 @@ const AccessibilityChecker: React.FC<AccessibilityCheckerProps> = ({
   bodyFont,
   className
 }) => {
-  const { currentMood } = useFontMoodStore();
+  const { currentMood, setCustomFonts } = useFontMoodStore();
   const [expanded, setExpanded] = useState(false);
   
   // Use the AI analysis service
   const analysisResult = analyzeFontPairing(headingFont, bodyFont, currentMood);
   
-  const handleApplyRecommendation = (recommendation: string) => {
-    // This is just a notification for now
-    // In a full implementation, this would update the font selection
-    toast.success(`Font recommendation noted: ${recommendation}`);
+  const handleApplyRecommendation = async (recommendation: string) => {
+    try {
+      // Parse the recommendation text to extract the font name
+      const fontNameMatch = recommendation.match(/Try\s+([^]+?)\s+as/i) || 
+                          recommendation.match(/Consider\s+([^]+?)\s+for/i);
+      
+      if (fontNameMatch && fontNameMatch[1]) {
+        const recommendedFont = fontNameMatch[1].trim();
+        
+        // Determine if it's for heading or body based on the recommendation text
+        const isHeadingFont = recommendation.toLowerCase().includes('heading');
+        
+        // Load the recommended font
+        await loadGoogleFont(recommendedFont);
+        
+        // Apply the font change
+        if (isHeadingFont) {
+          setCustomFonts(recommendedFont, bodyFont);
+          toast.success(`Applied ${recommendedFont} as heading font`);
+        } else {
+          setCustomFonts(headingFont, recommendedFont);
+          toast.success(`Applied ${recommendedFont} as body font`);
+        }
+      } else {
+        toast.error("Couldn't parse font recommendation");
+      }
+    } catch (error) {
+      console.error("Error applying font recommendation:", error);
+      toast.error("Failed to apply font recommendation");
+    }
   };
   
   return (
@@ -88,7 +115,7 @@ const AccessibilityChecker: React.FC<AccessibilityCheckerProps> = ({
                           </Button>
                         </HoverCardTrigger>
                         <HoverCardContent className="w-64 text-xs">
-                          This would apply the recommendation in a full implementation.
+                          This will apply the recommended font to your current pairing.
                         </HoverCardContent>
                       </HoverCard>
                     </li>

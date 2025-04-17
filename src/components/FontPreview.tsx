@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,8 +13,20 @@ const FontPreview: React.FC = () => {
   const currentPair = getCurrentPair();
   const [customText, setCustomText] = useState('');
   
+  // Track when the fonts change to display loading indicators properly
+  const [lastHeadingFont, setLastHeadingFont] = useState(currentPair.headingFont);
+  const [lastBodyFont, setLastBodyFont] = useState(currentPair.bodyFont);
+  
   // Load the fonts
   const { fontsLoaded } = useFontLoader(currentPair.headingFont, currentPair.bodyFont);
+  
+  // Update when fonts change
+  useEffect(() => {
+    if (currentPair.headingFont !== lastHeadingFont || currentPair.bodyFont !== lastBodyFont) {
+      setLastHeadingFont(currentPair.headingFont);
+      setLastBodyFont(currentPair.bodyFont);
+    }
+  }, [currentPair.headingFont, currentPair.bodyFont]);
   
   const headingStyles = {
     fontFamily: currentPair.headingFont,

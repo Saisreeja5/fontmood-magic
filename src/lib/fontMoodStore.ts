@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { loadGoogleFont } from '@/services/googleFonts';
 
@@ -151,25 +152,43 @@ const moodFontMap: MoodMap = {
 type FontMoodState = {
   currentMood: Mood;
   currentPairIndex: number;
+  customHeadingFont: string | null;
+  customBodyFont: string | null;
   setMood: (mood: Mood) => void;
   nextPair: () => void;
   getCurrentPair: () => FontPair;
+  setCustomFonts: (headingFont: string | null, bodyFont: string | null) => void;
 };
 
 export const useFontMoodStore = create<FontMoodState>((set, get) => ({
   currentMood: 'playful',
   currentPairIndex: 0,
-  setMood: (mood) => set({ currentMood: mood, currentPairIndex: 0 }),
+  customHeadingFont: null,
+  customBodyFont: null,
+  setMood: (mood) => set({ currentMood: mood, currentPairIndex: 0, customHeadingFont: null, customBodyFont: null }),
   nextPair: () => {
     const { currentMood, currentPairIndex } = get();
     const pairs = moodFontMap[currentMood];
     const nextIndex = (currentPairIndex + 1) % pairs.length;
-    set({ currentPairIndex: nextIndex });
+    set({ currentPairIndex: nextIndex, customHeadingFont: null, customBodyFont: null });
   },
   getCurrentPair: () => {
-    const { currentMood, currentPairIndex } = get();
-    return moodFontMap[currentMood][currentPairIndex];
+    const { currentMood, currentPairIndex, customHeadingFont, customBodyFont } = get();
+    const basePair = moodFontMap[currentMood][currentPairIndex];
+    
+    // Apply any custom fonts that have been set
+    return {
+      ...basePair,
+      headingFont: customHeadingFont || basePair.headingFont,
+      bodyFont: customBodyFont || basePair.bodyFont
+    };
   },
+  setCustomFonts: (headingFont, bodyFont) => {
+    set({
+      customHeadingFont: headingFont,
+      customBodyFont: bodyFont
+    });
+  }
 }));
 
 // Update the store to preload fonts
