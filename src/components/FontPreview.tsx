@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useFontMoodStore, FontPair } from '@/lib/fontMoodStore';
 import useFontLoader from '@/hooks/useFontLoader';
 import AccessibilityChecker from './AccessibilityChecker';
+import { toast } from 'sonner';
 
 const FontPreview: React.FC = () => {
   const { currentMood, nextPair, getCurrentPair } = useFontMoodStore();
@@ -13,7 +14,7 @@ const FontPreview: React.FC = () => {
   const [customText, setCustomText] = useState('');
   
   // Load the fonts
-  useFontLoader(currentPair.headingFont, currentPair.bodyFont);
+  const { fontsLoaded } = useFontLoader(currentPair.headingFont, currentPair.bodyFont);
   
   const headingStyles = {
     fontFamily: currentPair.headingFont,
@@ -37,7 +38,16 @@ const FontPreview: React.FC = () => {
 
   return (
     <div className="w-full max-w-3xl mx-auto animate-scale-in">
-      <div className={`font-card bg-gradient-to-br ${getMoodColor()} backdrop-blur-sm`}>
+      <div className={`font-card bg-gradient-to-br ${getMoodColor()} backdrop-blur-sm relative`}>
+        {!fontsLoaded && (
+          <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10">
+            <div className="text-center">
+              <div className="inline-block h-6 w-6 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mb-2"></div>
+              <p className="text-sm text-gray-600">Loading fonts...</p>
+            </div>
+          </div>
+        )}
+        
         <div className="flex justify-between items-center mb-4">
           <div>
             <span className="text-xs uppercase tracking-wider text-gray-500">Heading</span>
@@ -88,7 +98,10 @@ const FontPreview: React.FC = () => {
             Reset Text
           </Button>
           <Button 
-            onClick={nextPair}
+            onClick={() => {
+              nextPair();
+              toast.info('Loading next font pairing...');
+            }}
             className="flex items-center gap-2"
           >
             Next Pairing
